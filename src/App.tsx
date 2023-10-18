@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Container, Box } from '@mui/material';
-import { fetchCandidates } from './features/candidates';
-import { useAppDispatch, useAppSelector } from './store/hooks';
+import { useAppSelector } from './store/hooks';
 import Login from './components/Login';
+import CandidatesList from './components/CandidatesList';
 
 function App() {
     const isAuth = useAppSelector((state) => state.auth.token);
@@ -9,16 +9,16 @@ function App() {
     return (
         <>
             <AppBar position="static">
-                <Toolbar>Costume Contest!</Toolbar>
+                <Toolbar>Melhor fantasia!</Toolbar>
             </AppBar>
             <Container>
                 <Box
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
-                    minHeight="100vh"
+                    minHeight="calc(100vh - 64px)"
                 >
-                    {!isAuth ? <Login /> : <>VOTOS</>}
+                    {!isAuth ? <Login /> : <CandidatesList />}
                 </Box>
             </Container>
         </>

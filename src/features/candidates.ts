@@ -3,47 +3,54 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { getDatabase, ref, child, get } from 'firebase/database';
 
 export interface CandidatesState {
-    value: string[];
+    value: Record<string, string>;
     isLoading: boolean;
 }
 
 const initialState: CandidatesState = {
-    value: [],
+    value: {},
     isLoading: true,
 };
 
-export const fetchCandidates = createAsyncThunk('', async () => {
-    const dbRef = ref(getDatabase());
-    try {
-        const snapshot = await get(child(dbRef, '/candidates'));
+export const fetchCandidates = createAsyncThunk(
+    'addCandidates',
+    async (_, { dispatch }) => {
+        dispatch(setIsLoading(true));
 
-        if (snapshot.exists()) {
-            console.log(snapshot.val());
-            return snapshot.val();
-        } else {
-            console.log('No data available');
+        const dbRef = ref(getDatabase());
+        try {
+            const snapshot = await get(child(dbRef, '/candidates'));
+
+            if (snapshot.exists()) {
+                dispatch(setIsLoading(false));
+                return snapshot.val();
+            } else {
+                console.log('No data available');
+            }
+
+            dispatch(setIsLoading(false));
+        } catch (error) {
+            console.error(error);
+            dispatch(setIsLoading(false));
         }
-    } catch (error) {
-        console.error(error);
-    }
-});
+    },
+);
 
 const candidatesSlice = createSlice({
     name: 'candidates',
     initialState,
     reducers: {
-        receiveCandidates: (state, action: PayloadAction<string[]>) => {
-            state.value = action.payload;
-            state.isLoading = false;
+        setIsLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
         },
     },
     extraReducers(builder) {
         builder.addCase(fetchCandidates.fulfilled, (state, action) => {
-            return action.payload;
+            state.value = action.payload;
         });
     },
 });
 
-export const { receiveCandidates } = candidatesSlice.actions;
+export const { setIsLoading } = candidatesSlice.actions;
 
 export default candidatesSlice.reducer;
