@@ -11,11 +11,11 @@ export interface AuthState {
 const initialState: AuthState = {
     name: undefined,
     email: undefined,
-    token: undefined,
-    isAuth: false,
+    token: localStorage.getItem('token') ?? undefined,
+    isAuth: !!localStorage.getItem('token'),
 };
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
@@ -24,6 +24,7 @@ export const authSlice = createSlice({
         },
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
+            localStorage.setItem('token', action.payload);
         },
         setUser: (
             state,
@@ -34,3 +35,7 @@ export const authSlice = createSlice({
         },
     },
 });
+
+export const { setIsAuth, setToken, setUser } = authSlice.actions;
+
+export default authSlice.reducer;

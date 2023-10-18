@@ -5,16 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './setup/firebase';
 import { Provider } from 'react-redux';
+import env from 'react-dotenv';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { store } from './store';
+import { theme } from './setup/theme';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
 );
 root.render(
     <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
+        <GoogleOAuthProvider clientId={env.CLIENT_ID}>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <App />
+                </ThemeProvider>
+            </Provider>
+        </GoogleOAuthProvider>
     </React.StrictMode>,
 );
 

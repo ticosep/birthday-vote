@@ -1,30 +1,27 @@
-import { ThemeProvider, AppBar, Toolbar, Container } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import { theme } from './setup/theme';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import env from 'react-dotenv';
+import { AppBar, Toolbar, Container, Box } from '@mui/material';
+import { fetchCandidates } from './features/candidates';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import Login from './components/Login';
 
 function App() {
+    const isAuth = useAppSelector((state) => state.auth.token);
+
     return (
-        <GoogleOAuthProvider clientId={env.CLIENT_ID}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <AppBar position="static">
-                    <Toolbar>Costume Contest!</Toolbar>
-                </AppBar>
-                <Container>
-                    <GoogleLogin
-                        onSuccess={(credentialResponse) => {
-                            console.log(credentialResponse);
-                        }}
-                        onError={() => {
-                            console.log('Login Failed');
-                        }}
-                    />
-                    <main>This app is using the dark mode</main>
-                </Container>
-            </ThemeProvider>
-        </GoogleOAuthProvider>
+        <>
+            <AppBar position="static">
+                <Toolbar>Costume Contest!</Toolbar>
+            </AppBar>
+            <Container>
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight="100vh"
+                >
+                    {!isAuth ? <Login /> : <>VOTOS</>}
+                </Box>
+            </Container>
+        </>
     );
 }
 
