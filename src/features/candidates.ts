@@ -13,7 +13,7 @@ const initialState: CandidatesState = {
 };
 
 export const fetchCandidates = createAsyncThunk(
-    'addCandidates',
+    'getCandidates',
     async (_, { dispatch }) => {
         dispatch(setIsLoading(true));
 

@@ -36,10 +36,8 @@ const CandidatesList = () => {
                 <CircularProgress />
             ) : (
                 <>
-                    <h1>Selecione apenas uma!</h1>
-                    <h3>
-                        Não tente roubar, nós temos um sistema de auditoria{' '}
-                    </h3>
+                    <h1>Selecione a sua preferida!</h1>
+                    <h3>Não tente roubar, nós temos um sistema de auditoria</h3>
                     <form>
                         <Box width="100%">
                             <FormControl>
@@ -78,7 +76,6 @@ const CandidatesList = () => {
                                                     <img
                                                         src="https://plus.unsplash.com/premium_photo-1661894950761-312d659007d3?auto=format&fit=crop&q=80&w=1420&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                                         alt={name}
-                                                        loading="lazy"
                                                         style={{
                                                             height: '100%',
                                                             width: '100%',
