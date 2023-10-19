@@ -3,11 +3,13 @@ import {
     faWandMagicSparkles,
     faImage,
     faGhost,
+    faSignOut,
 } from '@fortawesome/free-solid-svg-icons';
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { AppBar, Container, Box, Modal } from '@mui/material';
 import { useState } from 'react';
 import ImageUploadForm from './ImageUploadForm';
+import { logout } from '../features/auth';
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -25,6 +27,7 @@ const modalStyle = {
 const Header = () => {
     const { name } = useAppSelector((state) => state.auth);
     const token = useAppSelector((state) => state.auth.token);
+    const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
 
     return (
@@ -62,10 +65,22 @@ const Header = () => {
                                 cursor: token ? 'pointer' : 'inherit',
                             }}
                             color="orange"
-                            size="2xl"
+                            size="xl"
                             onClick={() => (token ? setOpen(true) : null)}
                             icon={token ? faImage : faGhost}
                         />
+                        {!!token && (
+                            <FontAwesomeIcon
+                                style={{
+                                    cursor: 'pointer',
+                                    marginLeft: '1rem',
+                                }}
+                                color="orange"
+                                size="xl"
+                                onClick={() => dispatch(logout())}
+                                icon={faSignOut}
+                            />
+                        )}
                     </Box>
                 </Box>
             </Container>
