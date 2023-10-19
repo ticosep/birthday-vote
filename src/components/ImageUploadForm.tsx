@@ -53,13 +53,15 @@ const ImageUploadForm = ({
                     ([_, props]) => props.email === userEmail,
                 ) ?? [];
 
-            const updates = {
-                [`candidates/${userId}`]: {
-                    ...candidates[userId as string],
-                    image: imageUrl,
-                },
-            };
-            await db.update(dbRef, updates);
+            if (userId) {
+                const updates = {
+                    [`candidates/${userId}`]: {
+                        ...candidates[userId as string],
+                        image: imageUrl,
+                    },
+                };
+                await db.update(dbRef, updates);
+            }
 
             dispatch(setUserImage({ imageUrl, userEmail }));
         }

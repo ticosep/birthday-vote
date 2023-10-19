@@ -9,11 +9,17 @@ import {
     RadioGroup,
     FormControlLabel,
     Radio,
+    IconButton,
 } from '@mui/material';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faCheckToSlot } from '@fortawesome/free-solid-svg-icons';
 import { fetchCandidates } from '../features/candidates';
 import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useForm } from 'react-hook-form';
+
+type VoteType = {
+    userEmail: string;
+};
 
 const CandidatesList = () => {
     const dispatch = useAppDispatch();
@@ -25,19 +31,26 @@ const CandidatesList = () => {
     const isLoading = useAppSelector((state) => state.candidates.isLoading);
     const candidates = useAppSelector((state) => state.candidates.value);
 
+    const { handleSubmit, setValue } = useForm<VoteType>({
+        mode: 'onChange',
+    });
+
+    const handleSelect = (email: string) => {
+        setValue('userEmail', email);
+    };
+
+    const onSubmit = async (data: VoteType) => {
+        console.log(data);
+    };
+
     return (
-        <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            textAlign="center"
-        >
+        <Box display="flex" flexDirection="column" textAlign="center">
             {isLoading ? (
                 <CircularProgress />
             ) : (
                 <>
                     <h1>Selecione a sua preferida!</h1>
-                    <form>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <FormControl>
                             <RadioGroup>
                                 {Object.entries(candidates).map(
@@ -67,7 +80,15 @@ const CandidatesList = () => {
                                                                 'auto',
                                                         }}
                                                         value={props.email}
-                                                        control={<Radio />}
+                                                        control={
+                                                            <Radio
+                                                                onClick={() =>
+                                                                    handleSelect(
+                                                                        props.email,
+                                                                    )
+                                                                }
+                                                            />
+                                                        }
                                                         label={props.name}
                                                     />
                                                 </AccordionSummary>
@@ -95,6 +116,24 @@ const CandidatesList = () => {
                                 )}
                             </RadioGroup>
                         </FormControl>
+                        <IconButton
+                            sx={{
+                                position: 'fixed',
+                                border: '1px solid orange',
+                                padding: '1rem',
+                                right: '1rem',
+                                bottom: '1rem',
+                            }}
+                            type="submit"
+                            color="error"
+                            aria-label="add to shopping cart"
+                        >
+                            <FontAwesomeIcon
+                                size="2xl"
+                                color="orange"
+                                icon={faCheckToSlot}
+                            />
+                        </IconButton>
                     </form>
                 </>
             )}

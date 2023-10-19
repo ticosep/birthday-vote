@@ -35,23 +35,26 @@ const Header = () => {
             <Container maxWidth="lg">
                 <Box
                     display="flex"
-                    justifyContent="space-between"
+                    justifyContent={!token ? 'space-between' : 'flex-end'}
                     alignItems="center"
                 >
-                    <Box display="flex" alignItems="center">
-                        <h3
-                            style={{
-                                marginRight: '1rem',
-                            }}
-                        >
-                            Melhor fantasia
-                        </h3>
-                        <FontAwesomeIcon
-                            color="orange"
-                            size="2xl"
-                            icon={faWandMagicSparkles}
-                        />
-                    </Box>
+                    {!token && (
+                        <Box display="flex" alignItems="center">
+                            <h3
+                                style={{
+                                    marginRight: '1rem',
+                                }}
+                            >
+                                Melhor fantasia
+                            </h3>
+                            <FontAwesomeIcon
+                                color="orange"
+                                size="2xl"
+                                icon={faWandMagicSparkles}
+                            />
+                        </Box>
+                    )}
+
                     <Box display="flex" alignItems="center">
                         <h3
                             style={{

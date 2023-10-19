@@ -13,8 +13,8 @@ function App() {
             <Container>
                 <Box
                     display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    justifyContent={!!token ? 'flex-start' : 'center'}
+                    alignItems={!!token ? 'flex-start' : 'center'}
                     minHeight="calc(100vh - 64px)"
                 >
                     {!token ? <Login /> : <CandidatesList />}
