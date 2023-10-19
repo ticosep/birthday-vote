@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { getDatabase, ref, child, get } from 'firebase/database';
+import { Candidate } from '../types';
 
 export interface CandidatesState {
-    value: Record<string, string>;
+    value: Record<string, Candidate>;
     isLoading: boolean;
 }
 
@@ -43,6 +44,23 @@ const candidatesSlice = createSlice({
         setIsLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
+        setUserImage: (
+            state,
+            action: PayloadAction<{ imageUrl: string; userEmail: string }>,
+        ) => {
+            const [id, values] =
+                Object.entries(state.value).find(
+                    ([_, candidate]) =>
+                        candidate.email === action.payload.userEmail,
+                ) ?? [];
+
+            if (id && values) {
+                state.value = {
+                    ...state.value,
+                    [id]: { ...values, image: action.payload.imageUrl },
+                };
+            }
+        },
     },
     extraReducers(builder) {
         builder.addCase(fetchCandidates.fulfilled, (state, action) => {
@@ -51,6 +69,6 @@ const candidatesSlice = createSlice({
     },
 });
 
-export const { setIsLoading } = candidatesSlice.actions;
+export const { setIsLoading, setUserImage } = candidatesSlice.actions;
 
 export default candidatesSlice.reducer;

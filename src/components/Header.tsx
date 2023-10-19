@@ -2,14 +2,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faWandMagicSparkles,
     faImage,
+    faGhost,
 } from '@fortawesome/free-solid-svg-icons';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { AppBar, Container, Box } from '@mui/material';
+import { useAppSelector } from '../store/hooks';
+import { AppBar, Container, Box, Modal } from '@mui/material';
+import { useState } from 'react';
+import ImageUploadForm from './ImageUploadForm';
+
+const modalStyle = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 400,
+    bgcolor: 'background.paper',
+    border: '1px solid white',
+    borderRadius: '10px',
+    boxShadow: 24,
+    p: 4,
+};
 
 const Header = () => {
     const { name } = useAppSelector((state) => state.auth);
-
-    const dispatch = useAppDispatch();
+    const token = useAppSelector((state) => state.auth.token);
+    const [open, setOpen] = useState(false);
 
     return (
         <AppBar position="static">
@@ -42,13 +58,22 @@ const Header = () => {
                             {name}
                         </h3>
                         <FontAwesomeIcon
+                            style={{
+                                cursor: token ? 'pointer' : 'inherit',
+                            }}
                             color="orange"
                             size="2xl"
-                            icon={faImage}
+                            onClick={() => (token ? setOpen(true) : null)}
+                            icon={token ? faImage : faGhost}
                         />
                     </Box>
                 </Box>
             </Container>
+            <Modal open={open} onClose={() => {}}>
+                <Box sx={modalStyle}>
+                    <ImageUploadForm setOpen={setOpen} />
+                </Box>
+            </Modal>
         </AppBar>
     );
 };

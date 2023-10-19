@@ -37,16 +37,15 @@ const CandidatesList = () => {
             ) : (
                 <>
                     <h1>Selecione a sua preferida!</h1>
-                    <h3>Não tente roubar, nós temos um sistema de auditoria</h3>
                     <form>
-                        <Box width="100%">
-                            <FormControl>
-                                <RadioGroup>
-                                    {Object.entries(candidates).map(
-                                        ([name]) => (
+                        <FormControl>
+                            <RadioGroup>
+                                {Object.entries(candidates).map(
+                                    ([_, props]) => {
+                                        return (
                                             <Accordion
-                                                sx={{ my: 2 }}
-                                                key={name}
+                                                sx={{ my: 2, width: '100%' }}
+                                                key={props.name}
                                             >
                                                 <AccordionSummary
                                                     style={{
@@ -67,29 +66,35 @@ const CandidatesList = () => {
                                                             pointerEvents:
                                                                 'auto',
                                                         }}
-                                                        value={name}
+                                                        value={props.email}
                                                         control={<Radio />}
-                                                        label={name}
+                                                        label={props.name}
                                                     />
                                                 </AccordionSummary>
                                                 <AccordionDetails>
-                                                    <img
-                                                        src="https://plus.unsplash.com/premium_photo-1661894950761-312d659007d3?auto=format&fit=crop&q=80&w=1420&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                        alt={name}
-                                                        style={{
-                                                            height: '100%',
-                                                            width: '100%',
-                                                            objectFit:
-                                                                'contain',
-                                                        }}
-                                                    />
+                                                    {props.image ? (
+                                                        <img
+                                                            src={props.image}
+                                                            alt={props.name}
+                                                            style={{
+                                                                height: '100%',
+                                                                width: '100%',
+                                                                objectFit:
+                                                                    'contain',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <span>
+                                                            Sem foto ainda 😥
+                                                        </span>
+                                                    )}
                                                 </AccordionDetails>
                                             </Accordion>
-                                        ),
-                                    )}
-                                </RadioGroup>
-                            </FormControl>
-                        </Box>
+                                        );
+                                    },
+                                )}
+                            </RadioGroup>
+                        </FormControl>
                     </form>
                 </>
             )}
