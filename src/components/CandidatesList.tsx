@@ -12,8 +12,7 @@ import {
     IconButton,
 } from '@mui/material';
 import { faCamera, faCheckToSlot } from '@fortawesome/free-solid-svg-icons';
-import { fetchCandidates } from '../features/candidates';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm } from 'react-hook-form';
 
@@ -23,10 +22,8 @@ type VoteType = {
 
 const CandidatesList = () => {
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(fetchCandidates());
-    }, [dispatch]);
+    const [showVoteButton, setShowVoteButton] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const isLoading = useAppSelector((state) => state.candidates.isLoading);
     const candidates = useAppSelector((state) => state.candidates.value);
@@ -37,6 +34,7 @@ const CandidatesList = () => {
 
     const handleSelect = (email: string) => {
         setValue('userEmail', email);
+        setShowVoteButton(true);
     };
 
     const onSubmit = async (data: VoteType) => {
@@ -116,24 +114,26 @@ const CandidatesList = () => {
                                 )}
                             </RadioGroup>
                         </FormControl>
-                        <IconButton
-                            sx={{
-                                position: 'fixed',
-                                border: '1px solid orange',
-                                padding: '1rem',
-                                right: '1rem',
-                                bottom: '1rem',
-                            }}
-                            type="submit"
-                            color="error"
-                            aria-label="add to shopping cart"
-                        >
-                            <FontAwesomeIcon
-                                size="2xl"
-                                color="orange"
-                                icon={faCheckToSlot}
-                            />
-                        </IconButton>
+                        {showVoteButton && (
+                            <IconButton
+                                sx={{
+                                    position: 'fixed',
+                                    border: '1px solid orange',
+                                    padding: '1rem',
+                                    right: '1rem',
+                                    bottom: '1rem',
+                                }}
+                                onClick={() => setOpen(true)}
+                                color="error"
+                                aria-label="add to shopping cart"
+                            >
+                                <FontAwesomeIcon
+                                    size="2xl"
+                                    color="orange"
+                                    icon={faCheckToSlot}
+                                />
+                            </IconButton>
+                        )}
                     </form>
                 </>
             )}

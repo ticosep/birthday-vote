@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { getDatabase, ref, child, get } from 'firebase/database';
+import { getDatabase, ref, child, get, push } from 'firebase/database';
 import { Candidate } from '../types';
+import { RootState } from '../store';
+import { setUid } from './auth';
 
 export interface CandidatesState {
     value: Record<string, Candidate>;
@@ -13,29 +15,56 @@ const initialState: CandidatesState = {
     isLoading: true,
 };
 
-export const fetchCandidates = createAsyncThunk(
-    'getCandidates',
-    async (_, { dispatch }) => {
-        dispatch(setIsLoading(true));
+export const fetchCandidates = createAsyncThunk<
+    CandidatesState['value'],
+    void,
+    { state: RootState }
+>('getCandidates', async (_, { dispatch, getState }) => {
+    dispatch(setIsLoading(true));
 
-        const dbRef = ref(getDatabase());
-        try {
-            const snapshot = await get(child(dbRef, '/candidates'));
+    const dbRef = ref(getDatabase());
+    const state = getState();
+    const userEmail = state.auth.email;
+    const localCandidates = state.candidates.value;
 
-            if (snapshot.exists()) {
+    try {
+        const snapshot = await get(child(dbRef, '/candidates'));
+
+        if (snapshot.exists()) {
+            const candidates: CandidatesState['value'] = snapshot.val();
+            const hasUser =
+                Object.values(candidates).find((c) => c.email === userEmail) ??
+                Object.values(localCandidates).find(
+                    (c) => c.email === userEmail,
+                );
+
+            console.log(hasUser, localCandidates);
+            if (!hasUser) {
+                const response = await push(child(dbRef, '/candidates'), {
+                    ...state.auth,
+                });
+
+                const uid = response.key ?? '';
+                dispatch(setUid(uid));
+
                 dispatch(setIsLoading(false));
-                return snapshot.val();
-            } else {
-                console.log('No data available');
+
+                return { ...snapshot.val(), [uid]: { ...state.auth } };
             }
 
             dispatch(setIsLoading(false));
-        } catch (error) {
-            console.error(error);
-            dispatch(setIsLoading(false));
+
+            return snapshot.val();
+        } else {
+            console.log('No data available');
         }
-    },
-);
+
+        dispatch(setIsLoading(false));
+    } catch (error) {
+        console.error(error);
+        dispatch(setIsLoading(false));
+    }
+});
 
 const candidatesSlice = createSlice({
     name: 'candidates',
