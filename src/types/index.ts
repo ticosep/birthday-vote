@@ -1,7 +1,8 @@
 export type Candidate = {
     name: string;
     email: string;
+    uid: string;
     votes?: string[];
-    votedIn?: string;
+    voted?: boolean;
     image?: string;
 };

@@ -68,7 +68,9 @@ const Header = () => {
                                 }}
                                 color="orange"
                                 size="xl"
-                                onClick={() => dispatch(logout())}
+                                onClick={() =>
+                                    token ? dispatch(logout()) : null
+                                }
                                 icon={faSignOut}
                             />
                         )}
