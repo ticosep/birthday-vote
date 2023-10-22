@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { getDatabase, ref, child, get } from 'firebase/database';
+import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 import { Candidate } from '../types';
+import { RootState } from '../store';
+import { setUid } from './auth';
 
 export interface CandidatesState {
     value: Record<string, Candidate>;
@@ -13,29 +15,64 @@ const initialState: CandidatesState = {
     isLoading: true,
 };
 
-export const fetchCandidates = createAsyncThunk(
-    'getCandidates',
-    async (_, { dispatch }) => {
-        dispatch(setIsLoading(true));
+export const fetchCandidates = createAsyncThunk<
+    CandidatesState['value'],
+    void,
+    { state: RootState }
+>('getCandidates', async (_, { dispatch, getState }) => {
+    dispatch(setIsLoading(true));
 
-        const dbRef = ref(getDatabase());
-        try {
-            const snapshot = await get(child(dbRef, '/candidates'));
+    const dbRef = ref(getDatabase());
+    const state = getState();
+    const userEmail = state.auth.email;
 
-            if (snapshot.exists()) {
+    try {
+        const snapshot = await get(child(dbRef, '/candidates'));
+
+        if (snapshot.exists()) {
+            const candidates: CandidatesState['value'] = snapshot.val() ?? {};
+            const user = Object.values(candidates).find(
+                (c) => c.email === userEmail,
+            );
+
+            if (!user) {
+                const response = await push(child(dbRef, '/candidates'), {
+                    ...state.auth,
+                });
+
+                const uid = response.key ?? '';
+
+                const updates = {
+                    [`candidates/${uid}`]: {
+                        ...state.auth,
+                        uid,
+                    },
+                };
+
+                await update(dbRef, updates);
+
+                dispatch(setUid(uid));
+
                 dispatch(setIsLoading(false));
-                return snapshot.val();
-            } else {
-                console.log('No data available');
+
+                return { ...snapshot.val(), [uid]: { ...state.auth } };
             }
 
+            dispatch(setUid(user.uid));
+
             dispatch(setIsLoading(false));
-        } catch (error) {
-            console.error(error);
-            dispatch(setIsLoading(false));
+
+            return snapshot.val();
+        } else {
+            console.log('No data available');
         }
-    },
-);
+
+        dispatch(setIsLoading(false));
+    } catch (error) {
+        console.error(error);
+        dispatch(setIsLoading(false));
+    }
+});
 
 const candidatesSlice = createSlice({
     name: 'candidates',
@@ -46,20 +83,25 @@ const candidatesSlice = createSlice({
         },
         setUserImage: (
             state,
-            action: PayloadAction<{ imageUrl: string; userEmail: string }>,
+            action: PayloadAction<{ imageUrl: string; uid: string }>,
         ) => {
-            const [id, values] =
-                Object.entries(state.value).find(
-                    ([_, candidate]) =>
-                        candidate.email === action.payload.userEmail,
-                ) ?? [];
+            const candidate = state.value[action.payload.uid];
 
-            if (id && values) {
-                state.value = {
-                    ...state.value,
-                    [id]: { ...values, image: action.payload.imageUrl },
-                };
-            }
+            state.value = {
+                ...state.value,
+                [action.payload.uid]: {
+                    ...candidate,
+                    image: action.payload.imageUrl,
+                },
+            };
+        },
+        setUserVoted: (state, action: PayloadAction<{ uid: string }>) => {
+            const candidate = state.value[action.payload.uid];
+
+            state.value = {
+                ...state.value,
+                [action.payload.uid]: { ...candidate, voted: true },
+            };
         },
     },
     extraReducers(builder) {
@@ -69,6 +111,7 @@ const candidatesSlice = createSlice({
     },
 });
 
-export const { setIsLoading, setUserImage } = candidatesSlice.actions;
+export const { setIsLoading, setUserImage, setUserVoted } =
+    candidatesSlice.actions;
 
 export default candidatesSlice.reducer;

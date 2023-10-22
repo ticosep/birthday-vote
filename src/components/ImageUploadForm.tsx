@@ -15,7 +15,7 @@ const ImageUploadForm = ({
 }: {
     setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-    const userEmail = useAppSelector((state) => state.auth.email);
+    const { uid } = useAppSelector((state) => state.auth);
     const candidates = useAppSelector((state) => state.candidates.value);
     const dispatch = useAppDispatch();
 
@@ -36,33 +36,23 @@ const ImageUploadForm = ({
     const onSubmit = async (data: UploadType) => {
         setIsUploading(true);
 
-        if (userEmail) {
-            const storage = getStorage();
-            const dbRef = db.ref(db.getDatabase());
-            const storageRef = ref(
-                storage,
-                `/images/${userEmail}.${data.image[0].type}`,
-            );
+        const storage = getStorage();
+        const dbRef = db.ref(db.getDatabase());
+        const storageRef = ref(storage, `/images/${uid}.${data.image[0].type}`);
 
-            const uploadTask = await uploadBytes(storageRef, data.image[0]);
+        const uploadTask = await uploadBytes(storageRef, data.image[0]);
 
-            const imageUrl = await getDownloadURL(uploadTask.ref);
+        const imageUrl = await getDownloadURL(uploadTask.ref);
 
-            const [userId] =
-                Object.entries(candidates).find(
-                    ([_, props]) => props.email === userEmail,
-                ) ?? [];
+        const updates = {
+            [`candidates/${uid}`]: {
+                ...candidates[uid],
+                image: imageUrl,
+            },
+        };
+        await db.update(dbRef, updates);
 
-            const updates = {
-                [`candidates/${userId}`]: {
-                    ...candidates[userId as string],
-                    image: imageUrl,
-                },
-            };
-            await db.update(dbRef, updates);
-
-            dispatch(setUserImage({ imageUrl, userEmail }));
-        }
+        dispatch(setUserImage({ imageUrl, uid }));
 
         setIsUploading(false);
 

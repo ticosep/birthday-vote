@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -16,16 +15,14 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
 );
 root.render(
-    <React.StrictMode>
-        <GoogleOAuthProvider clientId={env.CLIENT_ID}>
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <App />
-                </ThemeProvider>
-            </Provider>
-        </GoogleOAuthProvider>
-    </React.StrictMode>,
+    <GoogleOAuthProvider clientId={env.CLIENT_ID}>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <App />
+            </ThemeProvider>
+        </Provider>
+    </GoogleOAuthProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
