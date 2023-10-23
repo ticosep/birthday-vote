@@ -12,8 +12,6 @@ function App() {
     const candidates = useAppSelector((state) => state.candidates.value);
     const voted = candidates[uid]?.voted;
 
-    console.log(voted);
-
     useEffect(() => {
         if (token) {
             dispatch(fetchCandidates());

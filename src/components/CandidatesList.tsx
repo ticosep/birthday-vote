@@ -54,8 +54,9 @@ const CandidatesList = () => {
         setLoading(true);
         const dbRef = ref(getDatabase());
         const userVoted = candidates[data.userUid];
+
         const votes = userVoted.votes
-            ? userVoted.votes.push(auth.uid)
+            ? [...userVoted.votes, auth.uid]
             : [auth.uid];
         const updates = {
             [`candidates/${data.userUid}`]: {
