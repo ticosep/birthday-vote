@@ -47,6 +47,7 @@ const ImageUploadForm = ({
         const updates = {
             [`candidates/${uid}`]: {
                 ...candidates[uid],
+                uid,
                 image: imageUrl,
             },
         };

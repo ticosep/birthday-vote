@@ -142,7 +142,7 @@ const CandidatesList = () => {
                                                 <AccordionDetails
                                                     sx={{
                                                         width: '100%',
-                                                        height: 'fit-content',
+                                                        height: '100%',
                                                     }}
                                                 >
                                                     {props.image ? (
@@ -151,7 +151,7 @@ const CandidatesList = () => {
                                                             alt={props.name}
                                                             loading="lazy"
                                                             style={{
-                                                                height: '100%',
+                                                                height: '350px',
                                                                 width: '100%',
                                                                 objectFit:
                                                                     'scale-down',
