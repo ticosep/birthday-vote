@@ -142,7 +142,7 @@ const CandidatesList = () => {
                                                 <AccordionDetails
                                                     sx={{
                                                         width: '100%',
-                                                        height: '500px',
+                                                        height: 'fit-content',
                                                     }}
                                                 >
                                                     {props.image ? (
