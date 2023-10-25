@@ -83,9 +83,8 @@ const ImageUploadForm = ({
                                     src="#"
                                     alt="selected img"
                                     style={{
-                                        height: '350px',
+                                        height: '250px',
                                         width: '350px',
-                                        objectFit: 'scale-down',
                                     }}
                                 />
                             ) : (

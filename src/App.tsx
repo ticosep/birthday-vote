@@ -5,6 +5,7 @@ import CandidatesList from './components/CandidatesList';
 import Header from './components/Header';
 import { fetchCandidates } from './features/candidates';
 import { useEffect } from 'react';
+import Votes from './components/Votes';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ function App() {
         if (token) {
             dispatch(fetchCandidates());
         }
-    }, [dispatch, token]);
+    }, [dispatch, token, voted]);
 
     return (
         <>
@@ -31,15 +32,7 @@ function App() {
                     {!token ? (
                         <Login />
                     ) : (
-                        <>
-                            {voted ? (
-                                <h1>
-                                    Obrigado pelo voto! Aguarde o resultado 👻
-                                </h1>
-                            ) : (
-                                <CandidatesList />
-                            )}
-                        </>
+                        <>{voted ? <Votes /> : <CandidatesList />}</>
                     )}
                 </Box>
             </Container>

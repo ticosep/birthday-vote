@@ -65,6 +65,7 @@ const CandidatesList = () => {
             },
             [`candidates/${auth.uid}`]: {
                 ...candidates[auth.uid],
+                uid: auth.uid,
                 voted: true,
             },
         };
@@ -89,7 +90,7 @@ const CandidatesList = () => {
                     <CircularProgress />
                 </Box>
             ) : (
-                <>
+                <Box textAlign="center">
                     <h1>Selecione a sua preferida!</h1>
                     <form id="vote" onSubmit={handleSubmit(onSubmit)}>
                         <FormControl sx={{ width: '100%' }}>
@@ -151,10 +152,8 @@ const CandidatesList = () => {
                                                             alt={props.name}
                                                             loading="lazy"
                                                             style={{
-                                                                height: '350px',
-                                                                width: '100%',
-                                                                objectFit:
-                                                                    'scale-down',
+                                                                height: 'auto',
+                                                                width: '350px',
                                                             }}
                                                         />
                                                     ) : (
@@ -225,7 +224,7 @@ const CandidatesList = () => {
                             </>
                         </CustomModal>
                     </form>
-                </>
+                </Box>
             )}
         </Box>
     );
