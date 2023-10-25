@@ -6,7 +6,7 @@ window.env = {
   "AUTH_DOMAIN": "birthday-vote.firebaseapp.com",
   "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
   "ChocolateyLastPathUpdate": "132922907378197832",
-  "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_13600_ZEIBGPGLCDNAYIAB",
+  "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_12856_VFKQIHKVFZBRWLND",
   "CLIENT_ID": "471272689107-htc3hgbupm00e6r62865mlp619f5gtmu.apps.googleusercontent.com",
   "COLOR": "1",
   "COLORTERM": "truecolor",

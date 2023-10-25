@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/birthday-vote/static/css/main.e64ba2b1.css",
-    "main.js": "/birthday-vote/static/js/main.e46f2e9f.js",
+    "main.js": "/birthday-vote/static/js/main.db809b71.js",
     "static/js/787.a9cee431.chunk.js": "/birthday-vote/static/js/787.a9cee431.chunk.js",
     "index.html": "/birthday-vote/index.html",
     "main.e64ba2b1.css.map": "/birthday-vote/static/css/main.e64ba2b1.css.map",
-    "main.e46f2e9f.js.map": "/birthday-vote/static/js/main.e46f2e9f.js.map",
+    "main.db809b71.js.map": "/birthday-vote/static/js/main.db809b71.js.map",
     "787.a9cee431.chunk.js.map": "/birthday-vote/static/js/787.a9cee431.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e64ba2b1.css",
-    "static/js/main.e46f2e9f.js"
+    "static/js/main.db809b71.js"
   ]
 }
